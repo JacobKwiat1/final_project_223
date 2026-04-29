@@ -1,6 +1,6 @@
 import json
 class Account:
-    def __init__(self, username, password, friends=[], blocked=[], new=True):
+    def __init__(self, username, password, friends=set(), blocked=set(), new=True):
         self.username = username
         self.password = password
         if new:
@@ -8,14 +8,25 @@ class Account:
         self.friends = friends
         self.blocked = blocked
 
+    def __repr__(self):
+        return f'username={self.username}\npassword={self.password}\nfriends={self.friends}\nblocked={self.blocked}'
+    
     def hash(self, text):
         out = text
         return out
     
-    def save_to_file(self, file="users.txt"):
-        toSave = {'username': self.username, 'password': self.password, 'friends':self.friends, 'blocked': self.blocked}
-        with open(file, 'a') as f:
-           f.append(json.dump(toSave))
+    def prep_to_save(self):
+        return {'username': self.username, 'password': self.password, 'friends':self.friends, 'blocked': self.blocked}
+        
+    def add_friend(self, friend):
+        self.friends.append(friend)
+
+    def block_user(self, user):
+        self.blocked.append(user)
+
+    def get_username(self):
+        return self.username
+    
 
 #helper function as part of module but not class
 def load_data(dict):
