@@ -1,4 +1,3 @@
-import json
 class Account:
     def __init__(self, username, password, friends=set(), blocked=set(), new=True):
         self.username = username
@@ -18,10 +17,10 @@ class Account:
     def prep_to_save(self):
         return {'username': self.username, 'password': self.password, 'friends':self.friends, 'blocked': self.blocked}
         
-    def add_friend(self, friend):
-        self.friends.append(friend)
+    def add_friend(self, user):
+        self.friends.append(user)
 
-    def block_user(self, user):
+    def add_blocked(self, user):
         self.blocked.append(user)
 
     def get_username(self):
