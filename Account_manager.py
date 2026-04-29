@@ -1,16 +1,19 @@
 import json
 import Account
 class Account_manager:
-    def __init__(self, file='users.txt'):
+    def __init__(self, file='account_management.json'):
         self.file = file
         #empty dict first in case empty file
         self.accounts = {}
-
-        with open(self.file, 'r') as f:
-            self.accounts.update(json.load(f))
-        #stick rawAccounts into dict as Account objects
-        for account in self.accounts:
-            self.accounts[account] = Account.load_data(self.account[account])
+        try:
+            with open(self.file, 'r') as f:
+                self.accounts.update(json.load(f))
+            #stick rawAccounts into dict as Account objects
+            for account in self.accounts:
+                self.accounts[account] = Account.load_data(self.accounts[account])
+        except:
+            with open(self.file, 'w') as f:
+                pass
 
     
     def is_account_real(self, user):
@@ -28,10 +31,10 @@ class Account_manager:
             return False
         self.accounts[blocker.get_username()].add_blocked(blockee.get_username())
 
-    def save_data(self, file='users.txt'):
+    def save_data(self):
         for account in self.accounts:
             self.accounts[account] = self.accounts[account].prep_to_save()
-        with open(file, 'w') as f:
+        with open(self.file, 'w') as f:
             json.dump(self.accounts, f)
     
     def get_user(self, user):
@@ -42,5 +45,10 @@ class Account_manager:
     def create_account(self, username, password):
         if username in self.accounts:
             return False
-        
         self.accounts[username] = Account.Account(username, password)
+
+    def __repr__(self):
+        out = ''
+        for username in self.accounts:
+            out += f'{self.accounts[username]}\n\n'
+        return out

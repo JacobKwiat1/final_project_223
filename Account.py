@@ -1,5 +1,5 @@
 class Account:
-    def __init__(self, username, password, friends=set(), blocked=set(), new=True):
+    def __init__(self, username, password, friends=[], blocked=[], new=True):
         self.username = username
         self.password = password
         if new:
