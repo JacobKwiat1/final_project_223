@@ -1,3 +1,5 @@
+from Messaging import *
+
 def main():
     # Send inputted username to server
     valid_signup = False
