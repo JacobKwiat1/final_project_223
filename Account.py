@@ -23,6 +23,11 @@ class Account:
     def add_blocked(self, user):
         self.blocked.append(user)
 
+    def verify_login(self, password):
+        if self.password == self.hash(password):
+            return True
+        return False
+    
     def get_username(self):
         return self.username
     

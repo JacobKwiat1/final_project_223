@@ -47,6 +47,11 @@ class Account_manager:
             return False
         self.accounts[username] = Account.Account(username, password)
 
+    def verify_login(self, username, password):
+        if not username in self.accounts:
+            return False
+        return self.accounts[username].verify_login(password)
+    
     def __repr__(self):
         out = ''
         for username in self.accounts:
