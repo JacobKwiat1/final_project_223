@@ -30,7 +30,8 @@ class Account_manager:
         if not (friender in self.accounts and self.accounts[friender].is_friend(friendee)):
             return False
         self.accounts[friender].remove_friend(friendee)
-        return False
+        self.accounts[friendee].remove_friend(friender)
+        return True
 
     def add_blocked(self, blocker, blockee):
         if not (blocker in self.accounts and blockee in self.accounts):
@@ -90,6 +91,7 @@ class Account_manager:
         if not self.accounts[requestee].is_request(requester):
             return False
         self.accounts[requestee].accept_request(requester)
+        self.accounts[requestee].add_friend(requester)
         return True
     
     def decline_request(self, requestee, requester):
