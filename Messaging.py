@@ -1,8 +1,7 @@
 # Current setup per dm session:
-# filename = f"{userA}?{userB}" if userA < userB else f"{userB}?{userA}"
-# logger = chat_logs_setup(filename)
-# Current way to send message:
-# logger.info({"sender": sender, "message": msg})
+# create instance of DM_Session ( example: dm = DM_Session(sender_username, receiver_username) )
+# How to send messages:
+# dm.send(message)
 
 
 import logging
@@ -22,41 +21,53 @@ class ChatJSONFormatter(logging.Formatter):
         entry = {
             "timestamp": datetime.datetime.fromtimestamp(record.created).isoformat(),
             "sender": msg_data["sender"],
+            "receiver": msg_data["receiver"],
             "message": msg_data["message"]
         }
 
         return json.dumps(entry)
 
-def chat_logs_setup(filename, level = logging.INFO):
-    # Assign ChatJsonFormatter class object to formatter
-    formatter = ChatJSONFormatter()
+class DM_Session:
+    def __init__(self, sender, receiver):
+        self.sender = sender
+        self.receiver = receiver
+        self.filename = f"{sender}?{receiver}" if sender < receiver else f"{receiver}?{sender}"
 
-    # File Handler
-    handler = logging.FileHandler(get_path(filename))
-    handler.setFormatter(formatter)
+        self.chat_logger = self.chat_logs_setup()
+        
+    def chat_logs_setup(self, level = logging.INFO):
+        # Assign ChatJsonFormatter class object to formatter
+        formatter = ChatJSONFormatter()
 
-    # Logger configuration
-    logger = logging.getLogger(f"ChatLogs_{filename}")
-    logger.setLevel(level)
-    logger.addHandler(handler)
+        # File Handler
+        handler = logging.FileHandler(self.get_path())
+        handler.setFormatter(formatter)
 
-    # No root logger
-    logger.propagate = False
+        # Logger configuration
+        logger = logging.getLogger(f"ChatLogs_{self.filename}")
+        logger.setLevel(level)
+        logger.addHandler(handler)
 
-    return logger
-    
-def get_path(filename):
-    # Set directory path
-    base_dir = Path(__file__).parent.resolve() / "Logs"
+        # No root logger
+        logger.propagate = False
 
-    # Make directory if it doesn't exit
-    base_dir.mkdir(exist_ok = True)
+        return logger
+        
+    def get_path(self):
+        # Set directory path
+        base_dir = Path(__file__).parent.resolve() / "Logs"
 
-    # Resolve the path
-    file_path = (base_dir / filename).resolve()
+        # Make directory if it doesn't exit
+        base_dir.mkdir(exist_ok = True)
 
-    # Path sanitizer for traversal check
-    if not file_path.is_relative_to(base_dir):
-        raise ValueError("Path traversal detected.")
-    else:
-        return str(file_path)
+        # Resolve the path
+        file_path = (base_dir / self.filename).resolve()
+
+        # Path sanitizer for traversal check
+        if not file_path.is_relative_to(base_dir):
+            raise ValueError("Path traversal detected.")
+        else:
+            return str(file_path)
+        
+    def send(self, msg):
+        self.chat_logger.info({"sender": self.sender, "receiver": self.receiver, "message": msg})

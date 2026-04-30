@@ -1,4 +1,4 @@
-from Messaging import *
+from Messaging import DM_Session
 
 def main():
     # Send inputted username to server
