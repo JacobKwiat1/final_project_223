@@ -1,3 +1,4 @@
+import hashlib
 class Account:
     def __init__(self, username, password, friends=[], blocked=[], new=True):
         self.username = username
@@ -11,8 +12,9 @@ class Account:
         return f'username={self.username}\npassword={self.password}\nfriends={self.friends}\nblocked={self.blocked}'
     
     def hash(self, text):
-        out = text
-        return out
+        hashedPass = text.encode()
+        hashedPass = hashlib.sha256(hashedPass).hexdigest()
+        return hashedPass
     
     def prep_to_save(self):
         return {'username': self.username, 'password': self.password, 'friends':self.friends, 'blocked': self.blocked}
