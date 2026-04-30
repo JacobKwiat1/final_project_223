@@ -19,7 +19,7 @@ class ChatJSONFormatter(logging.Formatter):
 
         # Message log format
         entry = {
-            "timestamp": datetime.datetime.fromtimestamp(record.created).isoformat(),
+            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "sender": msg_data["sender"],
             "receiver": msg_data["receiver"],
             "message": msg_data["message"]
@@ -31,7 +31,7 @@ class DM_Session:
     def __init__(self, sender, receiver):
         self.sender = sender
         self.receiver = receiver
-        self.filename = f"{sender}?{receiver}" if sender < receiver else f"{receiver}?{sender}"
+        self.filename = f"{sender}?{receiver}.txt" if sender < receiver else f"{receiver}?{sender}.txt"
 
         self.chat_logger = self.chat_logs_setup()
         
@@ -71,3 +71,12 @@ class DM_Session:
         
     def send(self, msg):
         self.chat_logger.info({"sender": self.sender, "receiver": self.receiver, "message": msg})
+
+    def print_msgs(self):
+        msg = {}
+        with open(self.get_path(), "r") as f:
+            for line in f:
+                msg = json.loads(line)
+                print(f"{msg["sender"]}: {msg["message"]}\n   {msg["timestamp"]}")
+
+

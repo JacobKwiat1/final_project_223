@@ -1,4 +1,5 @@
 from Messaging import DM_Session
+import time
 
 def main():
     # Send inputted username to server
@@ -30,4 +31,9 @@ def main():
     # Post login menu
 
 if __name__ == "__main__":
-    main()
+    #main()
+    dm = DM_Session("userA", "userB")
+    dm.send("Yo")
+    time.sleep(2)
+    dm.send("Whattup")
+    dm.print_msgs()
