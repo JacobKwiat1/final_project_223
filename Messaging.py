@@ -31,7 +31,7 @@ class DM_Session:
     def __init__(self, sender, receiver):
         self.sender = sender
         self.receiver = receiver
-        self.filename = f"{sender}?{receiver}.txt" if sender < receiver else f"{receiver}?{sender}.txt"
+        self.filename = f"{sender}-{receiver}.txt" if sender < receiver else f"{receiver}?{sender}.txt"
 
         self.chat_logger = self.chat_logs_setup()
         
