@@ -52,15 +52,13 @@ class Account_manager:
             json.dump(self.accounts, f)
     
     def get_user(self, username):
-        if username in self.accounts:
+        if username in self.accounts.keys():
             return self.accounts[username]
         return False
     
     def create_account(self, username, password):
         if username in self.accounts:
-            return False, "Username already in use"
-        #todo: regex
-        
+            return False
         self.accounts[username] = Account.Account(username, password)
         return True
 
@@ -75,6 +73,11 @@ class Account_manager:
     def is_friend(self, friender, friendee):
         return self.accounts[friender].is_friend(friendee)
     
+    def get_requests(self, user):
+        if(user in self.accounts):
+            return self.accounts[user].get_requests()
+        return False
+
     def change_password(self, username, old_password, new_password):
         if self.accounts[username].verify_login(old_password):
             self.accounts[username].change_password(new_password)
@@ -91,7 +94,7 @@ class Account_manager:
         if not self.accounts[requestee].is_request(requester):
             return False
         self.accounts[requestee].accept_request(requester)
-        self.accounts[requestee].add_friend(requester)
+        self.accounts[requester].add_friend(requestee)
         return True
     
     def decline_request(self, requestee, requester):
