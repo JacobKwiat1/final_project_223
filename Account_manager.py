@@ -103,6 +103,11 @@ class Account_manager:
         self.accounts[requestee].decline_request(requester)
         return True
     
+    def delete_account(self, username, password):
+        if not self.accounts[username].verify_login(password):
+            return False
+        del self.accounts[username]
+        return True
     def __repr__(self):
         out = ''
         for username in self.accounts:
