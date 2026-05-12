@@ -18,7 +18,7 @@ class Account:
         return hashed_pass
     
     def prep_to_save(self):
-        return {'username': self.username, 'password': self.password, 'friends':self.friends, 'blocked': self.blocked}
+        return {'username': self.username, 'password': self.password, 'requests': self.requests, 'friends':self.friends, 'blocked': self.blocked}
         
     def add_request(self, username):
         self.requests.append(username)
@@ -40,7 +40,7 @@ class Account:
     def add_blocked(self, username):
         self.blocked.append(username)
 
-    def add_blocked(self, username):
+    def remove_blocked(self, username):
         self.blocked.remove(username)
 
     def verify_login(self, password):
@@ -76,8 +76,8 @@ class Account:
         return False
     
     def change_password(self, password):
-        self.password = password
+        self.password = self.hash(password)
 
 #helper function as part of module but not class
 def load_data(dict):
-    return Account(dict['username'], dict['password'], dict['friends'], dict['blocked'], False)
+    return Account(dict['username'], dict['password'], dict['friends'], dict['blocked'], dict['requests'], False)
