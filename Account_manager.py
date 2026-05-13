@@ -16,7 +16,7 @@ class Account_manager:
                 pass
 
     def is_account_real(self, username):
-        if username in self.account:
+        if username in self.accounts:
             return True
         return False
     
@@ -32,6 +32,9 @@ class Account_manager:
         self.accounts[friender].remove_friend(friendee)
         self.accounts[friendee].remove_friend(friender)
         return True
+    
+    def get_friends(self, user):
+        return self.accounts[user].get_friends()
 
     def add_blocked(self, blocker, blockee):
         if not (blocker in self.accounts and blockee in self.accounts):
@@ -44,6 +47,9 @@ class Account_manager:
             return False
         self.accounts[blocker].remove_blocked(blockee)
         return True
+    
+    def get_blocked(self, user):
+        return self.accounts[user].get_blocked()
 
     def save_data(self):
         for account in self.accounts:
@@ -76,7 +82,7 @@ class Account_manager:
     def get_requests(self, user):
         if(user in self.accounts):
             return self.accounts[user].get_requests()
-        return False
+        return False       
 
     def change_password(self, username, old_password, new_password):
         if self.accounts[username].verify_login(old_password):
