@@ -31,25 +31,31 @@ class ChatJSONFormatter(logging.Formatter):
 
 class DM_Session:
     chat_logger = None
+    all_logger = None
 
     def __init__(self, sender, receiver):
         self.sender = sender
         self.receiver = receiver
         self.filename = f"{sender}-{receiver}.txt" if sender < receiver else f"{receiver}-{sender}.txt"
 
+        # DM Logs
         if f"ChatLogs_{self.filename}" not in logging.root.manager.loggerDict.keys():
             DM_Session.chat_logger = self.chat_logs_setup()
+        # Global Combined Logs
+        if f"ChatLogs_all" not in logging.root.manager.loggerDict.keys():
+            DM_Session.all_logger = self.chat_logs_setup(True)
+
         
-    def chat_logs_setup(self, level = logging.INFO):
+    def chat_logs_setup(self, all = False, level = logging.INFO):
         # Assign ChatJsonFormatter class object to formatter
         formatter = ChatJSONFormatter()
 
         # File Handler
-        handler = logging.FileHandler(self.get_path())
+        handler = logging.FileHandler(self.get_path() if all == False else "message_log.txt")
         handler.setFormatter(formatter)
 
         # Logger configuration
-        logger = logging.getLogger(f"ChatLogs_{self.filename}")
+        logger = logging.getLogger(f"ChatLogs_{self.filename}" if all == False else "ChatLogs_all")
         logger.setLevel(level)
         logger.addHandler(handler)
 
@@ -72,6 +78,7 @@ class DM_Session:
         
     def send(self, msg):
         DM_Session.chat_logger.info({"sender": self.sender, "receiver": self.receiver, "message": msg})
+        DM_Session.all_logger.info({"sender": self.sender, "receiver": self.receiver, "message": msg})
 
     def print_msgs(self):
         msg = {}
@@ -81,4 +88,3 @@ class DM_Session:
             for line in f:
                 msg = json.loads(line)
                 print(f"{msg["sender"]}: {msg["message"]}\n   {msg["timestamp"]}")
-
