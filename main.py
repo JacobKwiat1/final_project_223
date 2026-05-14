@@ -71,18 +71,18 @@ while(not program_exit):
             if(user == 3):
                 sender = current_user
                 receiver = input("Enter username to send to: ")
-                dm = DM_Session(sender, receiver)
                 if(social_media.is_account_real(receiver) == False):
-                    print("**\nError: User does not exist.**\n")
+                    print("\n**Error: User does not exist.**\n")
                     close = True
                 elif(social_media.is_blocked(receiver, sender)):
                     print(f"\n**Cannot direct message user. {receiver} has blocked you.**\n")
                     close = True
                 else:
                     close = False
-                print("Opened direct messaging with " + receiver + " (type '/quit' to exit).")
-                if(social_media.is_blocked(sender, receiver) == True):
-                    print("**WARNING: You have blocked this user. They cannot see your messages and they cannot send you messages.")
+                    dm = DM_Session(sender, receiver)
+                    print("Opened direct messaging with " + receiver + " (type '/quit' to exit).")
+                    if(social_media.is_blocked(sender, receiver) == True):
+                        print("**WARNING: You have blocked this user. They cannot see your messages and they cannot send you messages.")
                 while(not close):
                     dm.print_msgs()
                     message = input("Enter message: ")
